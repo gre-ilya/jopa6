@@ -12,9 +12,9 @@
  * the CLI can read points from a file. Three formats are recognised, chosen
  * by the file extension (override with the @c forcedFormat argument):
  *
- *   - CSV      (.csv, .txt): one point per line, "a,b,name". Lines starting
- *              with '#' and blank lines are ignored. A header line naming the
- *              columns (e.g. "lon,lat,name") is detected and skipped.
+ *   - CSV      (.csv, .txt): one point per line, "lat,lon,name" by default
+ *              (see CsvOrder). Lines starting with '#' and blank lines are
+ *              ignored. A header line naming the columns is detected and skipped.
  *   - JSON     (.json):      an array of objects, e.g.
  *              [{"lon": 37.6, "lat": 55.7, "name": "A"}, ...].
  *              Common key aliases (lng/longitude, latitude) are accepted.
@@ -25,8 +25,8 @@ namespace pointsio {
 
 enum class Format { Auto, Csv, Json, GeoJson };
 
-/// Column order for CSV input (JSON/GeoJSON are unaffected).
-enum class CsvOrder { LonLat, LatLon };
+/// Column order for the first two CSV fields (JSON/GeoJSON are unaffected).
+enum class CsvOrder { LatLon, LonLat };
 
 /**
  * @brief Load points from @p path.
@@ -38,7 +38,7 @@ enum class CsvOrder { LonLat, LatLon };
  */
 GeoPath load(const QString &path, QString *error,
              Format forcedFormat = Format::Auto,
-             CsvOrder csvOrder = CsvOrder::LonLat);
+             CsvOrder csvOrder = CsvOrder::LatLon);
 
 } // namespace pointsio
 

@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
         QStringLiteral("n"), QStringLiteral("0"));
     const QCommandLineOption tmsOpt("tms",
         QStringLiteral("Tiles use the TMS Y convention (origin bottom-left)."));
-    const QCommandLineOption latLonOpt("lat-lon",
-        QStringLiteral("CSV columns are 'lat,lon,name' instead of 'lon,lat,name'."));
+    const QCommandLineOption lonLatOpt("lon-lat",
+        QStringLiteral("CSV columns are 'lon,lat,name' instead of the default 'lat,lon,name'."));
     const QCommandLineOption marginOpt("margin",
         QStringLiteral("Empty margin around the content in px."),
         QStringLiteral("n"), QStringLiteral("24"));
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
         QStringLiteral("n"), QStringLiteral("92"));
 
     parser.addOptions({tilesOpt, pointsOpt, outOpt, zoomOpt, tileSizeOpt, tmsOpt,
-                       latLonOpt, marginOpt, maxSizeOpt, qualityOpt});
+                       lonLatOpt, marginOpt, maxSizeOpt, qualityOpt});
     parser.process(app);
 
     if (!parser.isSet(tilesOpt) || !parser.isSet(pointsOpt)) {
@@ -85,8 +85,8 @@ int main(int argc, char *argv[])
 
     // --- Load points -----------------------------------------------------
     QString loadError;
-    const auto csvOrder = parser.isSet(latLonOpt) ? pointsio::CsvOrder::LatLon
-                                                  : pointsio::CsvOrder::LonLat;
+    const auto csvOrder = parser.isSet(lonLatOpt) ? pointsio::CsvOrder::LonLat
+                                                  : pointsio::CsvOrder::LatLon;
     const GeoPath points = pointsio::load(parser.value(pointsOpt), &loadError,
                                           pointsio::Format::Auto, csvOrder);
     if (points.isEmpty()) {

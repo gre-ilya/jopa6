@@ -120,13 +120,15 @@ GeoPath parseJsonArray(const QJsonArray &array, QString *error)
             if (readPointObject(v.toObject(), &p))
                 path.append(p);
         } else if (v.isArray()) {
-            // Also accept [lon, lat] or [lon, lat, name] tuples.
+            // Also accept [lat, lon] or [lat, lon, name] tuples (lat first, to
+            // match the project convention). Note this differs from GeoJSON,
+            // whose coordinate arrays are always [lon, lat] per the standard.
             const QJsonArray tup = v.toArray();
             if (tup.size() >= 2) {
-                double lon = 0.0, lat = 0.0;
-                if (toNumber(tup.at(0), &lon) && toNumber(tup.at(1), &lat)) {
+                double lat = 0.0, lon = 0.0;
+                if (toNumber(tup.at(0), &lat) && toNumber(tup.at(1), &lon)) {
                     GeoPoint p;
-                    p.lon = lon; p.lat = lat;
+                    p.lat = lat; p.lon = lon;
                     if (tup.size() >= 3)
                         p.name = tup.at(2).toString();
                     path.append(p);

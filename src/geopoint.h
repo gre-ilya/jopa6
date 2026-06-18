@@ -23,7 +23,11 @@ struct GeoPoint
     QString name;       ///< Human readable label (may be empty).
 
     GeoPoint() = default;
-    GeoPoint(double longitude, double latitude, QString label = QString())
+
+    /// Positional constructor. Note the order is (latitude, longitude) to
+    /// match the project's "lat first" input convention; the stored members
+    /// @c lat and @c lon keep their usual meaning regardless.
+    GeoPoint(double latitude, double longitude, QString label = QString())
         : lon(longitude), lat(latitude), name(std::move(label))
     {
     }

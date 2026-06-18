@@ -83,7 +83,7 @@ left as background instead of failing the render.
 
 Key options (`--help` for the full list): `-t/--tiles`, `-p/--points`,
 `-o/--out`, `-z/--zoom` (`-1` = auto), `--tms`, `--tile-size`, `--margin`,
-`--max-size`, `--lat-lon` (CSV column order), `--quality`.
+`--max-size`, `--lon-lat` (CSV column order), `--quality`.
 
 > On a headless machine, run under the offscreen platform:
 > `QT_QPA_PLATFORM=offscreen ./build/mapgen ...`
@@ -92,14 +92,15 @@ Key options (`--help` for the full list): `-t/--tiles`, `-p/--points`,
 
 The CLI picks a parser by file extension:
 
-- **CSV** (`.csv`, `.txt`) — `lon,lat,name` per line (use `--lat-lon` to swap
+- **CSV** (`.csv`, `.txt`) — `lat,lon,name` per line (use `--lon-lat` to swap
   the first two columns). Blank lines, `#` comments and a header row are
   ignored.
-- **JSON** (`.json`) — an array of `{ "lon": .., "lat": .., "name": ".." }`
-  (aliases `lng`/`longitude`, `latitude` accepted), or `[lon, lat, name]`
-  tuples.
+- **JSON** (`.json`) — an array of `{ "lat": .., "lon": .., "name": ".." }`
+  (aliases `lng`/`longitude`, `latitude` accepted; key order is irrelevant), or
+  `[lat, lon, name]` tuples.
 - **GeoJSON** (`.geojson`) — a `FeatureCollection` of `Point` features; the
-  label is read from `properties.name` / `.title` / `.label`.
+  label is read from `properties.name` / `.title` / `.label`. Per the GeoJSON
+  standard, its coordinates stay **`[lon, lat]`**.
 
 See `examples/points.json` and `examples/points.csv`.
 
@@ -111,8 +112,9 @@ The library takes points directly — no files involved:
 #include "tilemaprenderer.h"
 
 GeoPath route = {
-    { 37.6175, 55.7520, QStringLiteral("Кремль") },
-    { 37.6208, 55.7539, QStringLiteral("Красная площадь") },
+    // GeoPoint(lat, lon, name)
+    { 55.7520, 37.6175, QStringLiteral("Кремль") },
+    { 55.7539, 37.6208, QStringLiteral("Красная площадь") },
 };
 
 RenderOptions opt;
