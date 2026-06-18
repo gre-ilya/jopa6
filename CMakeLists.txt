@@ -29,11 +29,12 @@ add_library(tilemap STATIC
 target_include_directories(tilemap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(tilemap PUBLIC Qt5::Gui)
 
-# Compile sources as UTF-8 under MSVC (and keep its standards conformance sane).
-# PUBLIC so the flags propagate to anything linking the module. No-op elsewhere.
+# Compile sources as UTF-8 under MSVC so non-ASCII string data is correct.
+# PUBLIC so the flag propagates to anything linking the module. No-op elsewhere.
+# NB: do NOT add /permissive- here — Qt 5.15's qvector.h/qlist.h rely on the
+# MSVC 'stdext' extension and fail to compile under strict conformance mode.
 target_compile_options(tilemap PUBLIC
     $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
-    $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 )
 
 # --- Command-line test harness ---------------------------------------------
