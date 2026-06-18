@@ -1,5 +1,7 @@
 # jopa6 — route renderer over offline map tiles
 
+[![Build](https://github.com/gre-ilya/jopa6/actions/workflows/build.yml/badge.svg)](https://github.com/gre-ilya/jopa6/actions/workflows/build.yml)
+
 Renders a list of named geographic points as a **connected, labelled route**
 drawn on top of **pre-downloaded map tiles** (the standard `{z}/{x}/{y}.png`
 "slippy map" layout used by OpenStreetMap, MapTiler, etc.).

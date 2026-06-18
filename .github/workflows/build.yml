@@ -1,0 +1,69 @@
+name: Build
+
+# Cross-platform build + smoke test on Linux and Windows.
+# Free for public repositories (unlimited GitHub Actions minutes).
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            bindir: build
+            ext: ""
+          - os: windows-latest
+            bindir: build/Release
+            ext: ".exe"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt 5.15
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "5.15.2"
+          cache: true
+
+      - name: Configure (CMake)
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      # Render an example route end-to-end using synthesised tiles. The
+      # offscreen platform plugin lets QPainter run without a display on both
+      # Linux and Windows. install-qt-action puts Qt's bin/ on PATH so the
+      # runtime libraries are found.
+      - name: Smoke test
+        shell: bash
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          set -euo pipefail
+          GEN="${{ matrix.bindir }}/gentiles${{ matrix.ext }}"
+          MAP="${{ matrix.bindir }}/mapgen${{ matrix.ext }}"
+          "$GEN" --points examples/points.json --tiles ci-tiles --zoom 15
+          "$MAP" --tiles ci-tiles --points examples/points.json --zoom 15 --out ci-route.png
+          test -s ci-route.png
+
+      - name: Upload rendered example
+        uses: actions/upload-artifact@v4
+        with:
+          name: route-${{ matrix.os }}
+          path: ci-route.png
+          if-no-files-found: error
