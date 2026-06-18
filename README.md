@@ -22,18 +22,45 @@ sudo apt-get install -y build-essential cmake qtbase5-dev
 
 ## Build
 
+The project ships both **qmake** and **CMake** build files; use whichever
+matches your host project.
+
+### qmake
+
+```bash
+qmake mapgen.pro && make          # the CLI
+qmake gentiles.pro && make        # the test-tile helper
+```
+
+### CMake
+
 ```bash
 cmake -S . -B build
 cmake --build build -j
 ```
 
-This produces:
+Either way you get:
 
-| Target     | What it is                                                        |
-|------------|-------------------------------------------------------------------|
-| `tilemap`  | Static library with `TileMapRenderer` — the embeddable module.    |
-| `mapgen`   | CLI: read points from a file, render to an image.                 |
-| `gentiles` | Test helper that synthesises tiles (build with `-DBUILD_TESTING=ON`, default on). |
+| Target / binary | What it is                                                        |
+|-----------------|-------------------------------------------------------------------|
+| `tilemap`       | The embeddable `TileMapRenderer` module (see `tilemap.pri`).      |
+| `mapgen`        | CLI: read points from a file, render to an image.                 |
+| `gentiles`      | Test helper that synthesises tiles (CMake: `-DBUILD_TESTING=ON`, default on). |
+
+## Integrating into a qmake project
+
+The renderer is exposed as a qmake **project include** (`tilemap.pri`). From
+your application's `.pro`, just include it:
+
+```pro
+include(/path/to/jopa6/tilemap.pri)
+```
+
+That adds the `TileMapRenderer` sources and headers, puts `src/` on the
+include path and pulls in `QT += gui`. The `.pri` intentionally leaves out the
+CLI-only parts (`main.cpp`, `pointsio.*`) — your program builds a `GeoPath`
+itself and calls `TileMapRenderer::render()` directly (see the module example
+below). No extra build steps, no separate library to link.
 
 ## Tile layout
 
@@ -125,6 +152,10 @@ were drawn or skipped — handy for logging.
 ## Project layout
 
 ```
+tilemap.pri           # qmake include for embedding the module in a host .pro
+mapgen.pro            # qmake build of the CLI
+gentiles.pro          # qmake build of the test-tile helper
+CMakeLists.txt        # CMake build (all three targets)
 src/
   geopoint.h          # GeoPoint / GeoPath data types
   mercator.h          # Web-Mercator / slippy-map projection math (header-only)
