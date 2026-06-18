@@ -12,13 +12,24 @@ command-line tool (`mapgen`) is included for standalone use and testing.
 
 ## Requirements
 
-- C++17 compiler
-- CMake >= 3.16
-- Qt5 **Gui** module (`qtbase5-dev`) — no Widgets needed
+- C++17 compiler (GCC, Clang, MinGW or MSVC)
+- Qt5 **Gui** module — no Widgets needed
+- qmake or CMake >= 3.16
+
+The module is **cross-platform** (Linux, Windows, macOS): it uses only Qt and
+the C++ standard library — no POSIX/Win32 headers, no `M_PI`, and tile paths
+use `/`, which Qt accepts on every platform. Sources are pure ASCII and the
+build files pass `/utf-8` to MSVC, so UTF-8 point names compile correctly.
 
 ```bash
+# Debian/Ubuntu
 sudo apt-get install -y build-essential cmake qtbase5-dev
 ```
+
+On **Windows** install Qt5 via the official Qt online installer (MSVC or MinGW
+kit) and build with that kit's CMake/qmake — or just open `CMakeLists.txt` /
+`mapgen.pro` in Qt Creator. The `examples/quick-test.sh` helper is a bash
+script (Linux/macOS); on Windows run `gentiles`/`mapgen` by hand instead.
 
 ## Build
 

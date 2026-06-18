@@ -16,6 +16,14 @@
 QT += gui
 CONFIG += c++17
 
+# MSVC interprets source files in the system code page unless told otherwise,
+# which mangles any non-ASCII string literal. The module's own sources are
+# pure ASCII, but enforce UTF-8 so a host project that adds Cyrillic/UTF-8
+# literals (e.g. point names) stays correct. No effect on GCC/Clang/MinGW.
+win32-msvc* {
+    QMAKE_CXXFLAGS += /utf-8
+}
+
 INCLUDEPATH += $$PWD/src
 DEPENDPATH  += $$PWD/src
 

@@ -29,6 +29,13 @@ add_library(tilemap STATIC
 target_include_directories(tilemap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(tilemap PUBLIC Qt5::Gui)
 
+# Compile sources as UTF-8 under MSVC (and keep its standards conformance sane).
+# PUBLIC so the flags propagate to anything linking the module. No-op elsewhere.
+target_compile_options(tilemap PUBLIC
+    $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
+    $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+)
+
 # --- Command-line test harness ---------------------------------------------
 add_executable(mapgen
     src/main.cpp
