@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "name": "Дворцовая площадь" },
+      "geometry": { "type": "Point", "coordinates": [30.3158, 59.9390] } },
+    { "type": "Feature", "properties": { "name": "Спас на Крови" },
+      "geometry": { "type": "Point", "coordinates": [30.3290, 59.9400] } },
+    { "type": "Feature", "properties": { "name": "Казанский собор" },
+      "geometry": { "type": "Point", "coordinates": [30.3245, 59.9343] } },
+    { "type": "Feature", "properties": { "name": "Исаакиевский собор" },
+      "geometry": { "type": "Point", "coordinates": [30.3061, 59.9342] } },
+    { "type": "Feature", "properties": { "name": "Медный всадник" },
+      "geometry": { "type": "Point", "coordinates": [30.3022, 59.9363] } },
+    { "type": "Feature", "properties": { "name": "Петропавловская крепость" },
+      "geometry": { "type": "Point", "coordinates": [30.3166, 59.9500] } }
+  ]
+}
