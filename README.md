@@ -28,10 +28,12 @@ build files pass `/utf-8` to MSVC, so UTF-8 point names compile correctly.
 sudo apt-get install -y build-essential cmake qtbase5-dev
 ```
 
-On **Windows** install Qt5 via the official Qt online installer (MSVC or MinGW
-kit) and build with that kit's CMake/qmake — or just open `CMakeLists.txt` /
-`mapgen.pro` in Qt Creator. The `examples/quick-test.sh` helper is a bash
-script (Linux/macOS); on Windows run `gentiles`/`mapgen` by hand instead.
+On **Windows** install Qt5 via the official Qt online installer and build with
+your kit's CMake/qmake — or just open `CMakeLists.txt` / `mapgen.pro` in Qt
+Creator. The **Clang (clang-cl)**, MSVC and MinGW kits all work; CI builds
+Windows with Clang (clang-cl) on every push. The `examples/quick-test.sh`
+helper is a bash script (Linux/macOS); on Windows run `gentiles`/`mapgen` by
+hand instead.
 
 ## Build
 

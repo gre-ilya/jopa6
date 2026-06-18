@@ -16,18 +16,24 @@ concurrency:
 
 jobs:
   build:
-    name: ${{ matrix.os }}
+    name: ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
+            label: Linux (gcc)
             bindir: build
             ext: ""
+            cmake_extra: ""
+          # Windows is built with Clang (clang-cl), matching a Qt Creator
+          # Clang kit; the MSVC compiler is intentionally not required.
           - os: windows-latest
+            label: Windows (clang-cl)
             bindir: build/Release
             ext: ".exe"
+            cmake_extra: "-T ClangCL"
 
     steps:
       - name: Checkout
@@ -40,7 +46,7 @@ jobs:
           cache: true
 
       - name: Configure (CMake)
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_extra }}
 
       - name: Build
         run: cmake --build build --config Release --parallel

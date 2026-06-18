@@ -16,11 +16,13 @@
 QT += gui
 CONFIG += c++17
 
-# MSVC interprets source files in the system code page unless told otherwise,
-# which mangles any non-ASCII string literal. The module's own sources are
-# pure ASCII, but enforce UTF-8 so a host project that adds Cyrillic/UTF-8
-# literals (e.g. point names) stays correct. No effect on GCC/Clang/MinGW.
-win32-msvc* {
+# MSVC-style compilers interpret source files in the system code page unless
+# told otherwise, which mangles any non-ASCII string literal. The module's own
+# sources are pure ASCII, but enforce UTF-8 so a host project that adds
+# Cyrillic/UTF-8 literals (e.g. point names) stays correct. This covers both
+# cl.exe (win32-msvc) and the Clang/MSVC kit (win32-clang-msvc, e.g. clang-cl
+# in Qt Creator). No effect on GCC or MinGW/Clang (GNU) targets.
+win32-msvc*|win32-clang-msvc {
     QMAKE_CXXFLAGS += /utf-8
 }
 
